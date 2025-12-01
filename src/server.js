@@ -9,6 +9,14 @@ const PORT = process.env.PORT || 3000;
 const PASSWORD = process.env.APP_PASSWORD || 'doko2024';
 const DATA_FILE = path.join(__dirname, 'data', 'storage.json');
 
+// HTTPS Redirect (falls nötig)
+app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+        return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+});
+
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
